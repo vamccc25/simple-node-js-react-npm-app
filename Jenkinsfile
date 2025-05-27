@@ -36,6 +36,11 @@ pipeline {
                 sh 'npm test -- --ci --reporters=default --reporters=jest-junit'
             }
         }
-
+  stage('Publish Test Results') {
+            steps {
+                junit 'junit.xml'
+            }
+        }
     }
 }
+    
