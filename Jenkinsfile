@@ -36,11 +36,29 @@ pipeline {
                 sh 'npm test -- --ci --reporters=default --reporters=jest-junit'
             }
         }
-  stage('Publish Test Results') {
+        stage('Publish Test Results') {
             steps {
                 junit 'junit.xml'
             }
         }
+        stage("CodeScanning"){
+        
+        steps {    
+
+           withSonarQubeEnv('sonar-qube') {
+                sh '''$SONAR_HOME/bin/sonar-scanner \
+                       -Dsonar.projectKey=node \
+                       -Dsonar.projectName=node \
+                       -Dsonar.sources=src/ \
+                       -Dsonar.analysis.mode=publish \
+                       -Dsonar.exclusions=**/*.html \
+                       -Dsonar.projectVersion=${BUILD_NUMBER}
+                
+                '''
+            }
+       }
+
     }
+}
 }
     
