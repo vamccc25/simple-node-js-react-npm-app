@@ -42,9 +42,11 @@ pipeline {
             }
         }
         stage("CodeScanning"){
-        
+              environment {
+           SONAR_HOME = tool name: 'sonar-scan'
+        }
         steps {    
-
+              
            withSonarQubeEnv('sonar-qube') {
                 sh '''$SONAR_HOME/bin/sonar-scanner \
                        -Dsonar.projectKey=node \
