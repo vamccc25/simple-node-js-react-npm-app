@@ -79,7 +79,7 @@ stage('Upload Artifact to Nexus') {
     steps {
         script {
             // Example: package.json contains version like "1.0.0-SNAPSHOT"
-            def packageJson = readJSON file: 'package.json'
+            def packagejson = readjSON file: 'package.json'
             def version = packagejson.version
             def artifactId = packagejson.name
 
