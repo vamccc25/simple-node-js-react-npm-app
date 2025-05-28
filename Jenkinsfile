@@ -69,7 +69,36 @@ pipeline {
 
     }
 
+stage('Upload Artifact to Nexus') {
+
+    environment {
+    NEXUS_USERNAME = credentials('nexus-creds')
+    NEXUS_PASSWORD = credentials('nexus-creds')
+}
+
+    steps {
+        script {
+            // Example: package.json contains version like "1.0.0-SNAPSHOT"
+            def packageJson = readJSON file: 'package.json'
+            def version = packageJson.version
+            def artifactId = packageJson.name
+
+            // Generate .tgz package using npm pack
+            sh "npm pack"
+            def tarball = "${artifactId}-${version}.tgz"
+
+            // Choose Nexus repository
+            def repository = version.contains('SNAPSHOT') ? 'npm-snapshots' : 'npm-releases'
+
+            // Upload .tgz to Nexus (use raw repo or npm-compatible repo with curl)
+            sh """
+                curl -v -u \$NEXUS_USERNAME:\$NEXUS_PASSWORD --upload-file ${tarball} \
+                http://nexus:8081/repository/${repository}/${artifactId}/${version}/${tarball}
+            """
+        }
     }
+ }
+ }
 }
 
     
