@@ -80,8 +80,8 @@ stage('Upload Artifact to Nexus') {
         script {
             // Example: package.json contains version like "1.0.0-SNAPSHOT"
             def packageJson = readJSON file: 'package.json'
-            def version = packageJson.version
-            def artifactId = packageJson.name
+            def version = packagejson.version
+            def artifactId = packagejson.name
 
             // Generate .tgz package using npm pack
             sh "npm pack"
